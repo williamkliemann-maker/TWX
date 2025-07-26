@@ -22,3 +22,29 @@ Below, sketch (ASCII, hand-drawn JPEG/PNG pasted in, or ASCII art) the high-leve
    - Logging of each reasoning step  
    - Error handling / retries  
 
+src/
+├── index.html                 # Main HTML file
+├── css/
+│   └── styles.css            # Main stylesheet
+├── js/
+│   ├── app.js                # Main application logic
+│   ├── components/
+│   │   ├── questionnaire.js  # Questionnaire functionality
+│   │   ├── dashboard.js      # Dashboard management
+│   │   ├── activities.js     # Extracurricular activities
+│   │   ├── essays.js         # Essay writing and management
+│   │   └── chat.js           # AI chat functionality
+│   ├── data/
+│   │   ├── questions.js      # Questionnaire questions
+│   │   ├── profiles.js       # Profile descriptions
+│   │   └── suggestions.js    # Chat suggestions
+│   └── utils/
+│       ├── storage.js        # Data management utilities
+│       ├── navigation.js     # Navigation helpers
+│       └── ai.js             # AI response generation
+├── assets/
+│   └── images/
+│       └── logo.png          # Application logo (if needed)
+└── docs/
+    └── README.md             # Project documentation
+
