@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApplicationCoach</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="apiStatus" class="api-status offline">🔴 AI Offline - Local Mode</div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                ApplicationCoach
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h1>Welcome to ApplicationCoach!</h1>
+            <div class="welcome-screen_text">
+                <p style="font-size: 18px; margin: 20px 0; color: #666;">
+                    Your personalized assistant for international university applications
+                </p>
+                <p style="margin: 30px 0;">
+                    To get started, let's get to know your academic profile through a quick questionnaire. 
+                    This will help us personalize all recommendations and feedback specifically for you.
+                </p>
+            </div>
+            <button class="btn" onclick="startQuestionnaire()">Start Questionnaire</button>
+        </div>
+
+        <!-- Questionnaire -->
+        <div class="questionnaire" id="questionnaire">
+            <button class="back-btn" onclick="showWelcome()">← Back</button>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div id="questionContainer"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next</button>
+                <button class="btn" id="finishBtn" onclick="finishQuestionnaire()" style="display: none;">Finish</button>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <div class="profile-badge" id="profileBadge"></div>
+            <h2>Main Dashboard</h2>
+            <p id="profileDescription"></p>
+            
+            <div class="main-buttons">
+                <button class="main-btn" onclick="showPage('extracurriculars')">
+                    <h3>📚 Extracurriculars</h3>
+                    <p>Organize and track your extracurricular activities with personalized AI feedback</p>
+                </button>
+                <button class="main-btn" onclick="showPage('essays')">
+                    <h3>✍️ Essays</h3>
+                    <p>Write and improve your essays with real-time analysis based on your profile</p>
+                </button>
+                <button class="main-btn" onclick="showPage('chatbot')">
+                    <h3>🤖 AI Assistant</h3>
+                    <p>Chat with our intelligent assistant and get personalized guidance for your applications</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Extracurriculars Page -->
+        <div class="page" id="extracurricularsPage">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>Extracurricular Activities</h2>
+            
+            <!-- Add Activity Form -->
+            <div class="add-activity-form" id="addActivityForm" style="display: none;">
+                <h3>Add New Activity</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label>Activity Name:</label>
+                        <input type="text" id="activityName" placeholder="e.g., Model United Nations, Math Olympiad">
+                    </div>
+                    <div class="form-group">
+                        <label>Activity Type:</label>
+                        <select id="activityType">
+                            <option value="">Select type...</option>
+                            <option value="competition">Competition/Olympiad</option>
+                            <option value="volunteer">Volunteer Work</option>
+                            <option value="leadership">Leadership/Organization</option>
+                            <option value="research">Research/Scientific Initiation</option>
+                            <option value="sports">Sports</option>
+                            <option value="arts">Arts/Culture</option>
+                            <option value="entrepreneurship">Entrepreneurship</option>
+                            <option value="exchange">Exchange/Cultural</option>
+                            <option value="technology">Technology/Programming</option>
+                            <option value="debate">Debate/Public Speaking</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select id="activityStatus" onchange="updateDateField()">
+                            <option value="todo">To Do</option>
+                            <option value="progress">In Progress</option>
+                            <option value="done">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="dateLabel">Date/Deadline:</label>
+                        <input type="date" id="activityDate">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Award/Recognition (if any):</label>
+                    <input type="text" id="activityPrize" placeholder="e.g., 1st Place, Honorable Mention, Certificate of Participation">
+                </div>
+                
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="activityDescription" rows="3" placeholder="Describe your participation, responsibilities, results achieved, impact generated, skills developed..."></textarea>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="btn" onclick="saveActivity()">Save Activity</button>
+                    <button class="btn" onclick="cancelActivity()" style="background: #455a64; color: #e1e5e9;">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Add Activity Button -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button class="btn" onclick="showAddActivityForm()">+ Add Activity</button>
+            </div>
+
+            <!-- Activities Management -->
+            <div class="page-content">
+                <div class="extracurricular-table">
+                    <div class="column">
+                        <h4>📋 To Do</h4>
+                        <div id="todoColumn">
+                            <p style="color: #666; font-style: italic; text-align: center; padding: 20px;">
+                                No planned activities yet.<br>
+                                Add activities you intend to pursue.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <h4>⏳ In Progress</h4>
+                        <div id="progressColumn">
+                            <p style="color: #666; font-style: italic; text-align: center; padding: 20px;">
+                                No activities in progress.<br>
+                                Add activities you're currently participating in.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <h4>✅ Completed</h4>
+                        <div id="doneColumn">
+                            <p style="color: #666; font-style: italic; text-align: center; padding: 20px;">
+                                No completed activities.<br>
+                                Add activities you've already finished.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-feedback">
+                    <h4>💡 Personalized AI Feedback</h4>
+                    <div id="extracurricularFeedback">
+                        <p>Add your extracurricular activities to receive personalized analysis based on your <strong><span id="currentProfile1"></span></strong> profile!</p>
+                        <br>
+                        <p><strong>The AI will analyze:</strong></p>
+                        <p>• Consistency with your academic profile</p>
+                        <p>• Diversity and balance of activities</p>
+                        <p>• Gaps that can be filled</p>
+                        <p>• Improvement suggestions</p>
+                        <p>• How to highlight your experiences in applications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Essays Page -->
+        <div class="page" id="essaysPage">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>Essays</h2>
+            <p>Write your essays here and receive real-time AI analysis based on your <span id="currentProfile2"></span> profile. The system will analyze clarity, profile alignment, structure, and offer specific suggestions.</p>
+            
+            <div class="essays-container">
+                <!-- Essay Editor -->
+                <div class="essay-editor">
+                    <h3>✍️ Essay Editor</h3>
+                    <div class="essay-form">
+                        <label>Essay Title:</label>
+                        <input type="text" id="essayTitle" placeholder="e.g., Personal Statement, Why this University">
+                        
+                        <label>University/Institution:</label>
+                        <input type="text" id="essayUniversity" placeholder="e.g., Harvard University, MIT">
+                        
+                        <label>Essay Type:</label>
+                        <select id="essayType">
+                            <option value="">Select type...</option>
+                            <option value="personal-statement">Personal Statement</option>
+                            <option value="why-university">Why This University</option>
+                            <option value="extracurricular">Extracurricular Essay</option>
+                            <option value="academic-interest">Academic Interest</option>
+                            <option value="diversity">Diversity Statement</option>
+                            <option value="challenge">Overcoming Challenges</option>
+                            <option value="leadership">Leadership Experience</option>
+                            <option value="other">Other</option>
+                        </select>
+                        
+                        <label>Essay Content:</label>
+                        <textarea id="essayContent" placeholder="Write your essay here..."></textarea>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn" onclick="saveEssay()">Save Essay</button>
+                            <button class="analyze-btn" onclick="analyzeEssay()">🤖 Analyze with AI</button>
+                            <button class="btn" onclick="clearEssayForm()" style="background: #455a64;">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Feedback -->
+                <div class="essay-feedback">
+                    <h3>💡 AI Analysis & Feedback</h3>
+                    <div class="essay-feedback-content" id="essayFeedbackContent">
+                        <p>Write your essay and click "Analyze with AI" to receive personalized feedback based on your <strong><span id="currentProfile2b"></span></strong> profile and extracurricular activities!</p>
+                        <br>
+                        <p><strong>The AI will analyze:</strong></p>
+                        <p>• Clarity and coherence of your writing</p>
+                        <p>• Alignment with your academic profile</p>
+                        <p>• Connection to your extracurricular activities</p>
+                        <p>• Structure and flow</p>
+                        <p>• Specific improvement suggestions</p>
+                        <p>• How to better highlight your unique qualities</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Essays List -->
+            <div class="essays-list">
+                <h3>📝 Your Saved Essays</h3>
+                <div id="savedEssaysList">
+                    <p style="color: #666; font-style: italic; text-align: center; padding: 20px;">
+                        No essays saved yet.<br>
+                        Write and save your first essay to see it here.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chat Page -->
+        <div class="page" id="chatbotPage">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>AI Assistant</h2>
+            <p>Chat with our intelligent assistant for personalized guidance about your international applications. All responses are tailored to your <span id="currentProfile3"></span> profile.</p>
+            
+            <!-- Profile Summary -->
+            <div class="chat-summary" id="chatSummary">
+                <h3>📊 Your Application Summary</h3>
+                <div class="chat-summary-content" id="chatSummaryContent">
+                    <p>Complete your profile to see a personalized summary here!</p>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai">
+                        <strong>AI Assistant:</strong> Hello! I'm your personalized university application assistant. I have access to your profile, activities, and essays to provide the most relevant guidance. How can I help you today?
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Ask anything about university applications, essays, extracurriculars..." onkeypress="handleChatKeyPress(event)">
+                        <button class="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+
+                    <!-- Suggested Questions -->
+                    <div class="suggested-questions">
+                        <h4>💡 Suggested Questions:</h4>
+                        <div class="suggestions-grid" id="suggestionsGrid">
+                            <!-- Suggestions will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data/questions.js"></script>
+    <script src="js/data/profiles.js"></script>
+    <script src="js/data/suggestions.js"></script>
+    <script src="js/utils/storage.js"></script>
+    <script src="js/utils/navigation.js"></script>
+    <script src="js/utils/ai.js"></script>
+    <script src="js/components/questionnaire.js"></script>
+    <script src="js/components/dashboard.js"></script>
+    <script src="js/components/activities.js"></script>
+    <script src="js/components/essays.js"></script>
+    <script src="js/components/chat.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
